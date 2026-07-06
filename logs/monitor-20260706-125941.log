@@ -1,0 +1,20 @@
+Linux Monitoring Dashboard - 2026-07-06 12:59:41 IST
+Hostname: parrot
+IP Address: 10.37.134.231
+Current User: liju
+Uptime: up 2 hours, 45 minutes
+Kernel: Linux 6.19.13+parrot7-amd64
+CPU Usage: CPU Usage: %Cpu(s): 28.0 us,  6.4 sy,  0.0 ni, 64.0 id,  0.8 wa,  0.0 hi,  0.8 si,  0.0 st 
+CPU Load: 2.49 1.21 0.85
+Memory: 7.0Gi / 15Gi used, 959Mi free
+
+Logged-in Users:
+liju     seat0        2026-07-06 10:14
+
+Top Processes:
+    PID COMMAND         %CPU %MEM
+  23100 codium          33.8  2.7
+  24636 bash            17.3  0.0
+  23075 codium          12.7  1.3
+   3042 brave            9.6  1.8
+   2311 kwin_wayland     7.1  1.9

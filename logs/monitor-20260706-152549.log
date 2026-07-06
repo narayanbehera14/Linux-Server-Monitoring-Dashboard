@@ -1,0 +1,16 @@
+Dashboard Generated Successfully
+Time: 2026-07-06 15:25:49 IST
+Hostname: parrot
+
+Uptime: up 5 hours, 11 minutes
+Kernel: Linux 6.19.13+parrot7-amd64
+CPU Load: 2.21 1.22 1.02
+Memory: 7.7Gi / 15Gi used, 583Mi free
+
+Top Processes:
+    PID COMMAND         %CPU %MEM
+   3042 brave            7.0  2.0
+   2311 kwin_wayland     5.8  1.8
+  27360 blueman-manager  4.8  0.6
+   2992 brave            4.2  3.5
+  23100 codium           3.4  2.8
