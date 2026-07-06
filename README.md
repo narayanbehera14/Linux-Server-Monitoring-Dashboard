@@ -2,7 +2,7 @@
 
 A Linux server monitoring dashboard built with Bash, HTML, CSS, Docker, Jenkins, and AWS EC2.
 
-- Live Demo: http://44.197.188.251:8080
+- Live Demo: http://23.23.147.41:8080
 - GitHub: https://github.com/narayanbehera14/Linux-Server-Monitoring-Dashboard
 
 ## Project Structure
