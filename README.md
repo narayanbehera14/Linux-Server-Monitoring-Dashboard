@@ -9,10 +9,29 @@ linux-server-monitor/
 ├── monitor.sh
 ├── report.html
 ├── style.css
+├── nginx-site.conf
 ├── README.md
 ├── logs/
 └── screenshots/
 ```
+
+## Architecture
+
+This project is designed as a simple monitoring dashboard with three main layers:
+
+- **Data collection**
+  - `monitor.sh` runs native Linux commands (`free`, `df`, `uptime`, `ps`, `who`, `hostname`, `date`) and formats the output.
+  - The script generates the HTML dashboard file and saves a timestamped log in `logs/` for audit/history.
+
+- **Presentation**
+  - `report.html` is the generated dashboard that displays system status information.
+  - `style.css` provides visual styling for the dashboard UI.
+
+- **Deployment / Automation**
+  - `cron` can run `monitor.sh` every minute to refresh `report.html` automatically.
+  - `nginx-site.conf` is a sample Nginx configuration that serves the dashboard at `http://localhost`.
+
+This architecture keeps the data pipeline simple while demonstrating monitoring, scheduling, and web deployment.
 
 ## What It Shows
 
