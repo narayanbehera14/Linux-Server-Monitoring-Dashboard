@@ -5,7 +5,6 @@ import platform
 import time
 import subprocess
 import requests
-import os
 
 app = Flask(__name__)
 
@@ -26,7 +25,7 @@ def metrics():
     try:
         with open("/host/etc/hostname", "r") as f:
             hostname = f.read().strip()
-    except:
+    except Exception:
         hostname = socket.gethostname()
 
     # =========================
@@ -37,7 +36,7 @@ def metrics():
             "hostname -I | awk '{print $1}'",
             shell=True
         ).decode().strip()
-    except:
+    except Exception:
         private_ip = "Unavailable"
 
     # =========================
@@ -48,7 +47,7 @@ def metrics():
             "https://ifconfig.me/ip",
             timeout=3
         ).text.strip()
-    except:
+    except Exception:
         public_ip = "Unavailable"
 
     # =========================
@@ -62,11 +61,11 @@ def metrics():
     memory = psutil.virtual_memory().percent
 
     # =========================
-    # Disk Usage (Host Disk)
+    # Disk Usage (Host EC2 Disk)
     # =========================
     try:
         disk = psutil.disk_usage("/host")
-    except:
+    except Exception:
         disk = psutil.disk_usage("/")
 
     disk_percent = disk.percent
@@ -75,7 +74,7 @@ def metrics():
     disk_free = round(disk.free / (1024 ** 3), 2)
 
     # =========================
-    # OS
+    # Operating System
     # =========================
     os_name = platform.platform()
 
@@ -95,13 +94,11 @@ def metrics():
     # Running Docker Containers
     # =========================
     try:
-        containers = subprocess.getoutput(
-            "docker ps --format '{{.Names}}'"
-        ).splitlines()
-
-        if containers == ['']:
-            containers = []
-    except:
+        containers = subprocess.check_output(
+            "docker ps --format '{{.Names}}'",
+            shell=True
+        ).decode().splitlines()
+    except Exception:
         containers = []
 
     # =========================
@@ -109,9 +106,9 @@ def metrics():
     # =========================
     try:
         connected_users = len(
-            subprocess.getoutput("who").splitlines()
+            subprocess.check_output("who", shell=True).decode().splitlines()
         )
-    except:
+    except Exception:
         connected_users = 0
 
     # =========================
