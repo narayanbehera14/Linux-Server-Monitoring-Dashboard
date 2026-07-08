@@ -1,77 +1,142 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Linux Server Monitor</title>
-  <link rel="stylesheet" href="/static/style.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Linux Server Monitor</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
-  <header>
-    <div>
-      <h1>Linux Server Monitor</h1>
-      <p>Live EC2 metrics, refreshed every 5 seconds.</p>
-    </div>
-    <div id="updated" class="updated">Loading metrics...</div>
-  </header>
 
-  <main class="grid">
+<header>
+    <div>
+        <h1>Linux Server Monitor</h1>
+        <p>Live EC2 metrics, refreshed every 5 seconds.</p>
+    </div>
+
+    <div id="updated" class="updated">
+        Loading metrics...
+    </div>
+</header>
+
+<main class="grid">
+
     <section class="panel">
-      <h2>Host</h2>
-      <p id="host">—</p>
-      <h2>OS</h2>
-      <p id="os">—</p>
-      <h2>Uptime</h2>
-      <p id="uptime">—</p>
+
+        <h2>Host</h2>
+        <p id="host">—</p>
+
+        <h2>OS</h2>
+        <p id="os">—</p>
+
+        <h2>Uptime</h2>
+        <p id="uptime">—</p>
+
     </section>
+
 
     <section class="panel metrics">
-      <div class="metric-card">
-        <h3>CPU</h3>
-        <div class="meter"><span id="cpu-bar"></span></div>
-        <p id="cpu">—</p>
-      </div>
 
-      <div class="metric-card">
-        <h3>RAM</h3>
-        <div class="meter"><span id="ram-bar"></span></div>
-        <p id="ram">—</p>
-      </div>
+        <div class="metric-card">
+            <h3>CPU</h3>
 
-      <div class="metric-card">
-        <h3>Disk</h3>
-        <div class="meter"><span id="disk-bar"></span></div>
-        <p id="disk">—</p>
-      </div>
+            <div class="meter">
+                <span id="cpu-bar"></span>
+            </div>
+
+            <p id="cpu">—</p>
+        </div>
+
+
+        <div class="metric-card">
+            <h3>RAM</h3>
+
+            <div class="meter">
+                <span id="ram-bar"></span>
+            </div>
+
+            <p id="ram">—</p>
+        </div>
+
+
+        <div class="metric-card">
+            <h3>Disk</h3>
+
+            <div class="meter">
+                <span id="disk-bar"></span>
+            </div>
+
+            <p id="disk">—</p>
+
+            <small id="disk-details"></small>
+
+        </div>
+
     </section>
-  </main>
 
-  <script>
-    async function loadData() {
-      try {
-        const res = await fetch('/metrics');
-        const result = await res.json();
+</main>
 
-        document.getElementById('host').textContent = result.hostname;
-        document.getElementById('os').textContent = result.os;
-        document.getElementById('uptime').textContent = result.uptime;
-        document.getElementById('cpu').textContent = `${result.cpu}%`;
-        document.getElementById('ram').textContent = `${result.memory}%`;
-        document.getElementById('disk').textContent = `${result.disk}%`;
 
-        document.getElementById('cpu-bar').style.width = `${result.cpu}%`;
-        document.getElementById('ram-bar').style.width = `${result.memory}%`;
-        document.getElementById('disk-bar').style.width = `${result.disk}%`;
+<script>
 
-        document.getElementById('updated').textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
-      } catch (error) {
-        document.getElementById('updated').textContent = 'Unable to load metrics';
-        console.error(error);
-      }
+async function loadData() {
+
+    try {
+
+        const response = await fetch("/metrics");
+        const result = await response.json();
+
+        // Host Information
+        document.getElementById("host").textContent = result.hostname;
+        document.getElementById("os").textContent = result.os;
+        document.getElementById("uptime").textContent = result.uptime;
+
+        // CPU
+        document.getElementById("cpu").textContent =
+            `${result.cpu}%`;
+
+        document.getElementById("cpu-bar").style.width =
+            `${result.cpu}%`;
+
+        // RAM
+        document.getElementById("ram").textContent =
+            `${result.memory}%`;
+
+        document.getElementById("ram-bar").style.width =
+            `${result.memory}%`;
+
+        // Disk
+        document.getElementById("disk").textContent =
+            `${result.disk_percent}%`;
+
+        document.getElementById("disk-bar").style.width =
+            `${result.disk_percent}%`;
+
+        document.getElementById("disk-details").textContent =
+            `Used ${result.disk_used} GB / ${result.disk_total} GB (Free ${result.disk_free} GB)`;
+
+        // Last Updated
+        document.getElementById("updated").textContent =
+            `Last updated: ${result.last_updated}`;
+
     }
 
-    loadData();
-    setInterval(loadData, 5000);
-  </script>
+    catch (err) {
+
+        console.error(err);
+
+        document.getElementById("updated").textContent =
+            "Unable to load metrics";
+
+    }
+
+}
+
+loadData();
+
+setInterval(loadData, 5000);
+
+</script>
+
 </body>
 </html>
