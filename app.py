@@ -2,7 +2,7 @@ from flask import Flask, jsonify, render_template
 import psutil
 import socket
 import platform
-import subprocess
+import time
 
 app = Flask(__name__)
 
@@ -12,7 +12,14 @@ def home():
 
 @app.route("/metrics")
 def metrics():
-    uptime = subprocess.check_output("uptime -p", shell=True).decode().strip()
+
+    boot_time = psutil.boot_time()
+    uptime_seconds = int(time.time() - boot_time)
+
+    hours = uptime_seconds // 3600
+    minutes = (uptime_seconds % 3600) // 60
+
+    uptime = f"{hours} hours {minutes} minutes"
 
     return jsonify({
         "hostname": socket.gethostname(),
