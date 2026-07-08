@@ -1,6 +1,11 @@
-FROM nginx:alpine
+FROM python:3.12-slim
 
-COPY report.html /usr/share/nginx/html/index.html
-COPY style.css /usr/share/nginx/html/style.css
+WORKDIR /app
+
+COPY . .
+
+RUN pip install -r requirements.txt
 
 EXPOSE 80
+
+CMD ["python", "app.py"]
