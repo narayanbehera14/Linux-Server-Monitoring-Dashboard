@@ -47,19 +47,26 @@ header {
   box-shadow: var(--shadow);
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  gap: 1rem;
+  align-items: flex-start;
+  gap: 2rem;
 }
 
 header h1 {
   margin: 0;
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
 }
 
 header p,
 .updated {
-  margin: 1rem 0 0;
-  color: rgba(255, 255, 255, 0.9);
+  margin: 0.5rem 0 0;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: 0.95rem;
+}
+
+.updated {
+  white-space: nowrap;
+  font-size: 0.85rem;
+  opacity: 0.9;
 }
 
 .grid {
@@ -73,18 +80,29 @@ header p,
   border: 1px solid var(--panel-border);
   border-radius: 1.25rem;
   box-shadow: var(--shadow);
+  padding: 2rem;
 }
 
 section h2,
 .metric-card h3 {
-  margin: 0 0 1rem;
+  margin: 0 0 0.5rem;
   color: var(--accent);
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  font-weight: 600;
 }
 
 .panel p {
-  margin: 0.5rem 0 0;
+  margin: 0;
   color: var(--text);
-  font-size: 1.05rem;
+  font-size: 1.25rem;
+  font-weight: 500;
+  margin-bottom: 2rem;
+}
+
+.panel p:last-child {
+  margin-bottom: 0;
 }
 
 .metrics {
@@ -97,16 +115,31 @@ section h2,
   background: rgba(15, 23, 42, 0.96);
   border: 1px solid rgba(148, 163, 184, 0.12);
   border-radius: 1rem;
-  padding: 1.2rem;
+  padding: 1.5rem;
+}
+
+.metric-card p {
+  margin: 0.8rem 0 0;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--accent-strong);
+}
+
+.metric-card small {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.8rem;
+  color: var(--muted);
 }
 
 .meter {
   width: 100%;
-  height: 16px;
+  height: 24px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  margin-bottom: 0.8rem;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 0.8rem 0;
   overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.1);
 }
 
 .meter span {
