@@ -5,8 +5,10 @@ import platform
 import time
 import subprocess
 import requests
+import os
 
 app = Flask(__name__)
+
 
 @app.route("/")
 def home():
@@ -18,16 +20,18 @@ def metrics():
 
     start = time.time()
 
+    # =========================
     # EC2 Hostname
+    # =========================
     try:
-        hostname = subprocess.check_output(
-            "cat /host/etc/hostname",
-            shell=True
-        ).decode().strip()
+        with open("/host/etc/hostname", "r") as f:
+            hostname = f.read().strip()
     except:
         hostname = socket.gethostname()
 
+    # =========================
     # Private IP
+    # =========================
     try:
         private_ip = subprocess.check_output(
             "hostname -I | awk '{print $1}'",
@@ -36,7 +40,9 @@ def metrics():
     except:
         private_ip = "Unavailable"
 
+    # =========================
     # Public IP
+    # =========================
     try:
         public_ip = requests.get(
             "https://ifconfig.me/ip",
@@ -45,23 +51,37 @@ def metrics():
     except:
         public_ip = "Unavailable"
 
-    # CPU
+    # =========================
+    # CPU Usage
+    # =========================
     cpu = psutil.cpu_percent(interval=0.5)
 
-    # Memory
+    # =========================
+    # Memory Usage
+    # =========================
     memory = psutil.virtual_memory().percent
 
-    # Disk
-    disk = psutil.disk_usage("/")
+    # =========================
+    # Disk Usage (Host Disk)
+    # =========================
+    try:
+        disk = psutil.disk_usage("/host")
+    except:
+        disk = psutil.disk_usage("/")
+
     disk_percent = disk.percent
     disk_total = round(disk.total / (1024 ** 3), 2)
     disk_used = round(disk.used / (1024 ** 3), 2)
     disk_free = round(disk.free / (1024 ** 3), 2)
 
-    # Operating System
+    # =========================
+    # OS
+    # =========================
     os_name = platform.platform()
 
+    # =========================
     # Uptime
+    # =========================
     boot_time = psutil.boot_time()
     uptime_seconds = int(time.time() - boot_time)
 
@@ -71,7 +91,9 @@ def metrics():
 
     uptime = f"{days}d {hours}h {minutes}m"
 
+    # =========================
     # Running Docker Containers
+    # =========================
     try:
         containers = subprocess.getoutput(
             "docker ps --format '{{.Names}}'"
@@ -82,16 +104,24 @@ def metrics():
     except:
         containers = []
 
+    # =========================
     # Connected Users
+    # =========================
     try:
-        connected_users = len(subprocess.getoutput("who").splitlines())
+        connected_users = len(
+            subprocess.getoutput("who").splitlines()
+        )
     except:
         connected_users = 0
 
+    # =========================
     # Response Time
+    # =========================
     response_time = round((time.time() - start) * 1000, 2)
 
+    # =========================
     # Last Updated
+    # =========================
     last_updated = time.strftime("%I:%M:%S %p")
 
     return jsonify({

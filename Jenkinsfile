@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     stages {
+
         stage('Clone') {
             steps {
                 checkout scm
@@ -22,7 +23,14 @@ pipeline {
 
         stage('Run Container') {
             steps {
-                sh 'docker run -d --name linux-monitor-container -p 8080:80 linux-monitor'
+                sh '''
+                docker run -d \
+                --name linux-monitor-container \
+                -p 8080:80 \
+                -v /:/host:ro \
+                -v /var/run/docker.sock:/var/run/docker.sock \
+                linux-monitor
+                '''
             }
         }
     }
