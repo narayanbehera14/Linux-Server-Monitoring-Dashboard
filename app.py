@@ -18,12 +18,21 @@ def metrics():
 
     start = time.time()
 
-    # Hostname
-    hostname = socket.gethostname()
+    # EC2 Hostname
+    try:
+        hostname = subprocess.check_output(
+            "cat /host/etc/hostname",
+            shell=True
+        ).decode().strip()
+    except:
+        hostname = socket.gethostname()
 
     # Private IP
     try:
-        private_ip = socket.gethostbyname(hostname)
+        private_ip = subprocess.check_output(
+            "hostname -I | awk '{print $1}'",
+            shell=True
+        ).decode().strip()
     except:
         private_ip = "Unavailable"
 
@@ -39,18 +48,17 @@ def metrics():
     # CPU
     cpu = psutil.cpu_percent(interval=0.5)
 
-    # RAM
+    # Memory
     memory = psutil.virtual_memory().percent
 
     # Disk
     disk = psutil.disk_usage("/")
-
     disk_percent = disk.percent
     disk_total = round(disk.total / (1024 ** 3), 2)
     disk_used = round(disk.used / (1024 ** 3), 2)
     disk_free = round(disk.free / (1024 ** 3), 2)
 
-    # OS
+    # Operating System
     os_name = platform.platform()
 
     # Uptime
@@ -63,7 +71,7 @@ def metrics():
 
     uptime = f"{days}d {hours}h {minutes}m"
 
-    # Docker Containers
+    # Running Docker Containers
     try:
         containers = subprocess.getoutput(
             "docker ps --format '{{.Names}}'"
@@ -76,8 +84,7 @@ def metrics():
 
     # Connected Users
     try:
-        users = subprocess.getoutput("who").splitlines()
-        connected_users = len(users)
+        connected_users = len(subprocess.getoutput("who").splitlines())
     except:
         connected_users = 0
 
@@ -88,39 +95,22 @@ def metrics():
     last_updated = time.strftime("%I:%M:%S %p")
 
     return jsonify({
-
         "hostname": hostname,
-
         "private_ip": private_ip,
-
         "public_ip": public_ip,
-
         "os": os_name,
-
         "cpu": cpu,
-
         "memory": memory,
-
         "disk_percent": disk_percent,
-
         "disk_total": disk_total,
-
         "disk_used": disk_used,
-
         "disk_free": disk_free,
-
         "uptime": uptime,
-
         "docker_running": len(containers),
-
         "docker_containers": containers,
-
         "connected_users": connected_users,
-
         "response_time": response_time,
-
         "last_updated": last_updated
-
     })
 
 
